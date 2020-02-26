@@ -30,16 +30,17 @@ class Todo extends Component {
     title: 'Meu primeiro Todo List',
     todos: [],
     originalTodos: [],
-    categs: []
+    categs: [],
   };
 
   createNewTodo = value => {
     const prevTodos = [...this.state.todos];
     const newTodo = {
       id: Date.now(),
-      value: value,
+      value: value.text,
       completed: false,
-      isHidden: false
+      isHidden: false,
+      categ: value.categ,
     };
 
     this.setState({ todos: [newTodo, ...prevTodos] });
@@ -52,7 +53,7 @@ class Todo extends Component {
       if (todo.id === selectedTodo.id) {
         return {
           ...todo,
-          completed: !todo.completed
+          completed: !todo.completed,
         };
       }
       return todo;
@@ -66,7 +67,7 @@ class Todo extends Component {
     const activesTodos = todos.map(todo => {
       return {
         ...todo,
-        isHidden: false
+        isHidden: false,
       };
     });
 
@@ -79,12 +80,12 @@ class Todo extends Component {
       if (todo.completed) {
         return {
           ...todo,
-          isHidden: true
+          isHidden: true,
         };
       }
       return {
         ...todo,
-        isHidden: false
+        isHidden: false,
       };
     });
 
@@ -97,12 +98,12 @@ class Todo extends Component {
       if (todo.completed) {
         return {
           ...todo,
-          isHidden: false
+          isHidden: false,
         };
       }
       return {
         ...todo,
-        isHidden: true
+        isHidden: true,
       };
     });
 
@@ -116,34 +117,62 @@ class Todo extends Component {
     this.setState({ todos: [...activesTodos] });
   };
 
-  addNewCateg = () => {
+  addNewCateg = categ => {
     // completar lógica para adicionar categorias
+    const prevCategs = this.state.categs;
+    if (prevCategs.includes(categ)) {
+      return;
+    }
+    this.setState({ categs: [...prevCategs, categ] });
   };
 
-  filterByCateg = () => {
+  filterByCateg = categ => {
     // completar lógica para filtrar tasks por categoria
+    const { todos } = this.state;
+    const activesTodos = todos.map(todo => {
+      if (todo.categ === categ) {
+        return {
+          ...todo,
+          isHidden: false,
+        };
+      }
+      return {
+        ...todo,
+        isHidden: true,
+      };
+    });
+
+    this.setState({ todos: [...activesTodos] });
   };
 
   render() {
-    const { todos, title } = this.state;
+    const { todos, title, categs } = this.state;
     const todosCount = todos.filter(todo => !todo.isHidden);
+    console.log('Todo');
 
     return (
       <div>
         <h1>{title}</h1>
         <span>
-          <select>
-            <option>lazer</option>
-            <option>work</option>
-            <option>school</option>
+          <select onChange={event => this.filterByCateg(event.target.value)}>
+            <option>selecione</option>
+            {categs.map(categ => (
+              <option key={Date.now()} value={categ}>
+                {categ}
+              </option>
+            ))}
           </select>
-          <TodoForm createNewTodo={this.createNewTodo} />
+          <TodoList
+            todos={todos}
+            title="Meu Todo List"
+            completeTodoItem={this.completeTodoItem}
+          />
+          <TodoForm
+            createNewTodo={this.createNewTodo}
+            addNewCateg={this.addNewCateg}
+          />
         </span>
-        <TodoList
-          todos={todos}
-          title='Meu Todo List'
-          completeTodoItem={this.completeTodoItem}
-        />
+
         <div>{pluralize(todosCount, 'Item', 'Items')} </div>
         <span>
           <button onClick={this.showAll}>All</button>
