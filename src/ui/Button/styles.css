@@ -1,0 +1,17 @@
+.comp-button {
+  cursor: pointer;
+  border: 2px solid #333;
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 10px;
+  margin: 0 5px;
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.comp-button:hover {
+  border: 2px solid #333;
+  background-color: #333;
+  color: #f0f0f0;
+}

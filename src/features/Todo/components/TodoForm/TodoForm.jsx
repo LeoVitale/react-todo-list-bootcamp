@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import TextInput from '../../../../ui/TextInput';
 
 /* - Escrever uma função que quando eu pressionar 
 ENTER, vamos adicionar o texto a lista 'todos'
@@ -22,14 +23,16 @@ const TodoForm = ({ createNewTodo, addNewCateg }) => {
 
   return (
     <div>
-      <input
+      <TextInput
+        label="Task Description"
         type="text"
         value={taskName}
         onKeyPress={onKeyPress}
         onChange={event => setTaskName(event.target.value)}
         required
       />
-      <input
+      <TextInput
+        label="Category"
         type="text"
         value={categ}
         onKeyPress={onKeyPress}

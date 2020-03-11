@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
+import Button from '../../ui/Button';
 import { pluralize } from '../../helpers/utils';
 
 // Todo
@@ -156,8 +157,8 @@ class Todo extends Component {
         <span>
           <select onChange={event => this.filterByCateg(event.target.value)}>
             <option>selecione</option>
-            {categs.map(categ => (
-              <option key={Date.now()} value={categ}>
+            {categs.map((categ, index) => (
+              <option key={index} value={categ}>
                 {categ}
               </option>
             ))}
@@ -174,11 +175,11 @@ class Todo extends Component {
         </span>
 
         <div>{pluralize(todosCount, 'Item', 'Items')} </div>
-        <span>
-          <button onClick={this.showAll}>All</button>
-          <button onClick={this.showActives}>Actives</button>
-          <button onClick={this.showCompleteds}>Completed</button>
-          <button onClick={this.clearCompleteds}>Clear Completeds</button>
+        <span id="minhaSpan" className="button-container blue">
+          <Button onClick={this.showAll}>All</Button>
+          <Button onClick={this.showActives}>Actives</Button>
+          <Button onClick={this.showCompleteds}>Completed</Button>
+          <Button onClick={this.clearCompleteds}>Clear Completeds</Button>
         </span>
       </div>
     );
