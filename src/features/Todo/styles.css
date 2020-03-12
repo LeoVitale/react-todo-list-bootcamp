@@ -1,0 +1,23 @@
+.todo {
+  width: 450px;
+  padding: 10px;
+}
+
+.todo-count {
+  font-size: 20px;
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.button-container {
+  display: flex;
+}
+
+.button-container .button {
+  margin-right: 5px;
+}
+
+.button-container .button:last-child {
+  margin-right: 0;
+}

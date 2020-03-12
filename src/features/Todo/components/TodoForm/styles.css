@@ -1,0 +1,14 @@
+.todo-form {
+  width: 100%;
+  display: flex;
+  margin: 20px 0;
+}
+
+.todo-form .text-input-container {
+  width: 50%;
+}
+
+.todo-form .text-input-container:first-child {
+  width: 50%;
+  margin-right: 5px;
+}

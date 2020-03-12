@@ -4,6 +4,9 @@ import TodoList from './components/TodoList';
 import Button from '../../ui/Button';
 import { pluralize } from '../../helpers/utils';
 
+import './styles.css';
+import Select from '../../ui/Select';
+
 // Todo
 /*
 
@@ -28,7 +31,7 @@ texto e pressionar Enter, o texto será inserido em uma lista
 
 class Todo extends Component {
   state = {
-    title: 'Meu primeiro Todo List',
+    title: 'My Personal Task List',
     todos: [],
     originalTodos: [],
     categs: [],
@@ -78,15 +81,9 @@ class Todo extends Component {
   showActives = () => {
     const { todos } = this.state;
     const activesTodos = todos.map(todo => {
-      if (todo.completed) {
-        return {
-          ...todo,
-          isHidden: true,
-        };
-      }
       return {
         ...todo,
-        isHidden: false,
+        isHidden: todo.completed,
       };
     });
 
@@ -96,15 +93,9 @@ class Todo extends Component {
   showCompleteds = () => {
     const { todos } = this.state;
     const activesTodos = todos.map(todo => {
-      if (todo.completed) {
-        return {
-          ...todo,
-          isHidden: false,
-        };
-      }
       return {
         ...todo,
-        isHidden: true,
+        isHidden: !todo.completed,
       };
     });
 
@@ -131,15 +122,9 @@ class Todo extends Component {
     // completar lógica para filtrar tasks por categoria
     const { todos } = this.state;
     const activesTodos = todos.map(todo => {
-      if (todo.categ === categ) {
-        return {
-          ...todo,
-          isHidden: false,
-        };
-      }
       return {
         ...todo,
-        isHidden: true,
+        isHidden: !(todo.categ === categ),
       };
     });
 
@@ -152,30 +137,29 @@ class Todo extends Component {
     console.log('Todo');
 
     return (
-      <div>
+      <div className="todo">
         <h1>{title}</h1>
-        <span>
-          <select onChange={event => this.filterByCateg(event.target.value)}>
-            <option>selecione</option>
-            {categs.map((categ, index) => (
-              <option key={index} value={categ}>
-                {categ}
-              </option>
-            ))}
-          </select>
-          <TodoList
-            todos={todos}
-            title="Meu Todo List"
-            completeTodoItem={this.completeTodoItem}
-          />
-          <TodoForm
-            createNewTodo={this.createNewTodo}
-            addNewCateg={this.addNewCateg}
-          />
-        </span>
+        <Select
+          options={categs}
+          onChange={event => this.filterByCateg(event.target.value)}
+        />
 
-        <div>{pluralize(todosCount, 'Item', 'Items')} </div>
-        <span id="minhaSpan" className="button-container blue">
+        <TodoForm
+          createNewTodo={this.createNewTodo}
+          addNewCateg={this.addNewCateg}
+        />
+
+        <TodoList
+          todos={todos}
+          title="Meu Todo List"
+          completeTodoItem={this.completeTodoItem}
+        />
+
+        <div className="todo-count">
+          {pluralize(todosCount, 'Item', 'Items')}{' '}
+        </div>
+
+        <span className="button-container">
           <Button onClick={this.showAll}>All</Button>
           <Button onClick={this.showActives}>Actives</Button>
           <Button onClick={this.showCompleteds}>Completed</Button>

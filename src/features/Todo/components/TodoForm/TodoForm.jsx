@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import TextInput from '../../../../ui/TextInput';
+import './styles.css';
 
 /* - Escrever uma função que quando eu pressionar 
 ENTER, vamos adicionar o texto a lista 'todos'
@@ -22,7 +23,7 @@ const TodoForm = ({ createNewTodo, addNewCateg }) => {
   console.log('TodoForm');
 
   return (
-    <div>
+    <div className="todo-form">
       <TextInput
         label="Task Description"
         type="text"

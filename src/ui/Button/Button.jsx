@@ -5,7 +5,7 @@ const Button = ({ children, ...props }) => {
   console.log('Button', props);
 
   return (
-    <button {...props} className="comp-button">
+    <button {...props} className="button">
       {children}
     </button>
   );

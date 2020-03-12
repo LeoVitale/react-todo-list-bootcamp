@@ -1,0 +1,27 @@
+.custom-select {
+  position: relative;
+  width: 100%;
+}
+
+.custom-select:after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  background-image: url('../../assets/img/arrow-down.svg');
+  background-size: 20px;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+select {
+  width: 100%;
+  border: 2px solid #333;
+  font-size: 18px;
+  border-radius: 0;
+  padding: 10px 10px;
+  appearance: none;
+}

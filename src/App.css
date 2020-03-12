@@ -1,5 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
 .App {
+  width: 100vw;
+  height: 100vh;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e3c35c;
 }
 
 .App-logo {
