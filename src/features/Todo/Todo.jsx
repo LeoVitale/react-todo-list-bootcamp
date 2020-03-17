@@ -6,6 +6,7 @@ import { pluralize } from '../../helpers/utils';
 
 import './styles.css';
 import Select from '../../ui/Select';
+import { getTasks, postTask } from '../../api';
 
 // Todo
 /*
@@ -37,17 +38,27 @@ class Todo extends Component {
     categs: [],
   };
 
+  componentDidMount() {
+    // Método GET
+    getTasks().then(response => {
+      this.setState({ todos: response.data });
+    });
+  }
+
   createNewTodo = value => {
     const prevTodos = [...this.state.todos];
     const newTodo = {
-      id: Date.now(),
       value: value.text,
       completed: false,
       isHidden: false,
       categ: value.categ,
     };
 
-    this.setState({ todos: [newTodo, ...prevTodos] });
+    postTask(newTodo).then(response =>
+      alert(`A Tarefa ${response.data.value} foi adicionada com sucesso!`),
+    );
+
+    this.setState({ todos: [{ ...newTodo, id: Date.now() }, ...prevTodos] });
   };
 
   completeTodoItem = selectedTodo => {
