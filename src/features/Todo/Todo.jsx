@@ -6,7 +6,7 @@ import { pluralize } from '../../helpers/utils';
 
 import './styles.css';
 import Select from '../../ui/Select';
-import { getTasks, postTask } from '../../api';
+import { getTasks, postTask, updateTask } from '../../api';
 
 // Todo
 /*
@@ -40,8 +40,21 @@ class Todo extends Component {
 
   componentDidMount() {
     // Método GET
+
     getTasks().then(response => {
-      this.setState({ todos: response.data });
+      // let categs = [];
+      // for (let index = 0; index < response.data.length; index++) {
+      //   const todo = response.data[index];
+      //   categs.push(todo.categ);
+      // }
+
+      // response.data.forEach(todo => {
+      //   categs.push(todo.categ);
+      // });
+
+      const categs = response.data.map(todo => todo.categ);
+
+      this.setState({ todos: response.data, categs });
     });
   }
 
@@ -55,7 +68,9 @@ class Todo extends Component {
     };
 
     postTask(newTodo).then(response =>
-      alert(`A Tarefa ${response.data.value} foi adicionada com sucesso!`),
+      console.log(
+        `A Tarefa ${response.data.value} foi adicionada com sucesso!`,
+      ),
     );
 
     this.setState({ todos: [{ ...newTodo, id: Date.now() }, ...prevTodos] });
@@ -63,15 +78,15 @@ class Todo extends Component {
 
   completeTodoItem = selectedTodo => {
     const { todos } = this.state;
+    const newTodo = { ...selectedTodo, completed: !selectedTodo.completed };
+    const newTodos = todos.map(todo =>
+      todo.id === selectedTodo.id ? newTodo : todo,
+    );
 
-    const newTodos = todos.map(todo => {
-      if (todo.id === selectedTodo.id) {
-        return {
-          ...todo,
-          completed: !todo.completed,
-        };
-      }
-      return todo;
+    updateTask(newTodo).then(response => {
+      console.log(
+        `A Tarefa ${response.data.value} foi atualizada com sucesso!`,
+      );
     });
 
     this.setState({ todos: newTodos });
@@ -126,6 +141,7 @@ class Todo extends Component {
     if (prevCategs.includes(categ)) {
       return;
     }
+
     this.setState({ categs: [...prevCategs, categ] });
   };
 
@@ -145,7 +161,7 @@ class Todo extends Component {
   render() {
     const { todos, title, categs } = this.state;
     const todosCount = todos.filter(todo => !todo.isHidden);
-    console.log('Todo');
+    // console.log('Todo');
 
     return (
       <div className="todo">

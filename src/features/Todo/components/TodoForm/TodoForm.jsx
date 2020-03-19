@@ -20,7 +20,7 @@ const TodoForm = ({ createNewTodo, addNewCateg }) => {
     }
   };
 
-  console.log('TodoForm');
+  // console.log('TodoForm');
 
   return (
     <div className="todo-form">

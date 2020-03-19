@@ -3,7 +3,7 @@ import TodoItem from '../TodoItem';
 import './styles.css';
 
 const TodoList = ({ todos = [], completeTodoItem }) => {
-  console.log('TodoList');
+  // console.log('TodoList');
 
   if (todos.length === 0) {
     return null;

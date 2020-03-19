@@ -2,7 +2,7 @@ import React from 'react';
 import './styles.css';
 
 const TodoItem = ({ todo, completeTodoItem }) => {
-  console.log('TodoItem', todo.value);
+  // console.log('TodoItem', todo.value);
   return (
     <div
       className={`todo-item ${todo.completed ? 'completed' : ''}`}
