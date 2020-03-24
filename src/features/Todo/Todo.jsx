@@ -6,7 +6,7 @@ import { pluralize } from '../../helpers/utils';
 
 import './styles.css';
 import Select from '../../ui/Select';
-import { getTasks, postTask, updateTask } from '../../api';
+import { getTasks, postTask, updateTask, deleteTask } from '../../api';
 
 // Todo
 /*
@@ -29,7 +29,7 @@ texto e pressionar Enter, o texto será inserido em uma lista
 8 - Contador
 
 */
-
+const myStyles = { display: 'none', backgroundColor: 'red' };
 class Todo extends Component {
   state = {
     title: 'My Personal Task List',
@@ -158,6 +158,28 @@ class Todo extends Component {
     this.setState({ todos: [...activesTodos] });
   };
 
+  updateTodoItem = task => {
+    const { todos } = this.state;
+    const newTodo = { ...task };
+    const newTodos = todos.map(todo => (todo.id === task.id ? newTodo : todo));
+    updateTask(task).then(response => {
+      console.log(`A Tarefa ${response.data.id} foi atualizada com sucesso!`);
+    });
+
+    this.setState({ todos: [...newTodos] });
+  };
+
+  deleteTodoItem = task => {
+    const { todos, categs } = this.state;
+    const newTodos = todos.filter(todo => todo.id !== task.id);
+    const newCategs = categs.filter(categ => categ !== task.categ);
+
+    deleteTask(task).then(response => {
+      console.log(`A Tarefa ${response.data.id} foi removida com sucesso!`);
+    });
+    this.setState({ todos: [...newTodos], categs: [...newCategs] });
+  };
+
   render() {
     const { todos, title, categs } = this.state;
     const todosCount = todos.filter(todo => !todo.isHidden);
@@ -180,6 +202,8 @@ class Todo extends Component {
           todos={todos}
           title="Meu Todo List"
           completeTodoItem={this.completeTodoItem}
+          updateTodoItem={this.updateTodoItem}
+          deleteTodoItem={this.deleteTodoItem}
         />
 
         <div className="todo-count">
