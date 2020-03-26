@@ -29,8 +29,9 @@ const TodoItem = ({
   };
 
   return (
-    <Container className={` ${todo.completed ? 'completed' : ''}`}>
-      {' '}
+    <Container
+      style={{ display: todo.isHidden ? 'none' : 'block' }}
+      className={` ${todo.completed ? 'completed' : ''}`}>
       {edit ? (
         <div>
           <EditInput
@@ -47,7 +48,7 @@ const TodoItem = ({
           />
         </div>
       ) : (
-        <div style={{ display: todo.isHidden ? 'none' : 'block' }}>
+        <div>
           <span onClick={() => completeTodoItem(todo)}>
             {todo.value} - {todo.categ}
           </span>

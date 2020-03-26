@@ -32,6 +32,7 @@ texto e pressionar Enter, o texto será inserido em uma lista
 const myStyles = { display: 'none', backgroundColor: 'red' };
 class Todo extends Component {
   state = {
+    categsCount: {},
     title: 'My Personal Task List',
     todos: [],
     originalTodos: [],
@@ -51,12 +52,48 @@ class Todo extends Component {
       // response.data.forEach(todo => {
       //   categs.push(todo.categ);
       // });
-
+      let categsCount = {};
       const categs = response.data.map(todo => todo.categ);
 
-      this.setState({ todos: response.data, categs });
+      response.data.forEach(todo => {
+        console.log(todo);
+
+        //BUG no state (26/03):
+        categsCount = { ...categsCount, ...this.categSumCount(todo.categ) };
+      });
+
+      console.log(categsCount);
+
+      this.setState({
+        todos: response.data,
+        categs,
+        //verificar se sera undefined
+        categsCount: categsCount || {},
+      });
     });
   }
+
+  /* const count = {
+    animal: 0,
+    categ1: 0
+  }*/
+  categSumCount = categ => {
+    const { categsCount } = this.state;
+    const count = {
+      ...categsCount,
+      [categ]: categsCount[categ] >= 0 ? categsCount[categ] + 1 : 1,
+    };
+    return count;
+  };
+
+  categSubCount = categ => {
+    const { categsCount } = this.state;
+    const count = {
+      ...categsCount,
+      [categ]: categsCount[categ] > 0 ? categsCount[categ] - 1 : 0,
+    };
+    return count;
+  };
 
   createNewTodo = value => {
     const prevTodos = [...this.state.todos];
@@ -66,6 +103,7 @@ class Todo extends Component {
       isHidden: false,
       categ: value.categ,
     };
+    const categsCount = this.categSumCount(value.categ);
 
     postTask(newTodo).then(response =>
       console.log(
@@ -73,7 +111,10 @@ class Todo extends Component {
       ),
     );
 
-    this.setState({ todos: [{ ...newTodo, id: Date.now() }, ...prevTodos] });
+    this.setState({
+      todos: [{ ...newTodo, id: Date.now() }, ...prevTodos],
+      categsCount,
+    });
   };
 
   completeTodoItem = selectedTodo => {
@@ -154,6 +195,8 @@ class Todo extends Component {
         isHidden: !(todo.categ === categ),
       };
     });
+    // const uniqueTodo = new Set(activesTodos);
+    // const backTodo = [...uniqueTodo];
 
     this.setState({ todos: [...activesTodos] });
   };
@@ -171,19 +214,27 @@ class Todo extends Component {
 
   deleteTodoItem = task => {
     const { todos, categs } = this.state;
+    const categsCount = this.categSubCount(task.categ);
     const newTodos = todos.filter(todo => todo.id !== task.id);
-    const newCategs = categs.filter(categ => categ !== task.categ);
+
+    const newCategs = categs.filter(
+      categ => categ !== task.categ && categsCount[categ] > 0,
+    );
 
     deleteTask(task).then(response => {
       console.log(`A Tarefa ${response.data.id} foi removida com sucesso!`);
     });
-    this.setState({ todos: [...newTodos], categs: [...newCategs] });
+    this.setState({
+      todos: [...newTodos],
+      categs: [...newCategs],
+      categsCount,
+    });
   };
 
   render() {
-    const { todos, title, categs } = this.state;
+    const { todos, title, categs, categsCount } = this.state;
     const todosCount = todos.filter(todo => !todo.isHidden);
-    // console.log('Todo');
+    console.log(this.state);
 
     return (
       <div className="todo">
