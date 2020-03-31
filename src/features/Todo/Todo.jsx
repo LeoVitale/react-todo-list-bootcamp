@@ -29,7 +29,6 @@ texto e pressionar Enter, o texto será inserido em uma lista
 8 - Contador
 
 */
-const myStyles = { display: 'none', backgroundColor: 'red' };
 class Todo extends Component {
   state = {
     categsCount: {},
@@ -52,31 +51,28 @@ class Todo extends Component {
       // response.data.forEach(todo => {
       //   categs.push(todo.categ);
       // });
-      let categsCount = {};
-      const categs = response.data.map(todo => todo.categ);
 
+      let categsCount = {};
       response.data.forEach(todo => {
-        console.log(todo);
+        const count = {
+          ...categsCount,
+          [todo.categ]:
+            categsCount[todo.categ] >= 0 ? categsCount[todo.categ] + 1 : 1,
+        };
 
         //BUG no state (26/03):
-        categsCount = { ...categsCount, ...this.categSumCount(todo.categ) };
+        //categsCount = { ...categsCount, ...this.categSumCount(todo.categ) };
+        categsCount = count;
       });
-
-      console.log(categsCount);
 
       this.setState({
         todos: response.data,
-        categs,
-        //verificar se sera undefined
+        categs: Object.keys(categsCount),
         categsCount: categsCount || {},
       });
     });
   }
 
-  /* const count = {
-    animal: 0,
-    categ1: 0
-  }*/
   categSumCount = categ => {
     const { categsCount } = this.state;
     const count = {
@@ -172,6 +168,13 @@ class Todo extends Component {
   clearCompleteds = () => {
     const { todos } = this.state;
     const activesTodos = todos.filter(todo => !todo.completed);
+    todos.forEach(todo => {
+      if (todo.completed) {
+        deleteTask(todo).then(response => {
+          console.log(`A Tarefa ${response.data.id} foi removida com sucesso!`);
+        });
+      }
+    });
 
     this.setState({ todos: [...activesTodos] });
   };
@@ -216,10 +219,7 @@ class Todo extends Component {
     const { todos, categs } = this.state;
     const categsCount = this.categSubCount(task.categ);
     const newTodos = todos.filter(todo => todo.id !== task.id);
-
-    const newCategs = categs.filter(
-      categ => categ !== task.categ && categsCount[categ] > 0,
-    );
+    const newCategs = categs.filter(categ => categsCount[categ] > 0);
 
     deleteTask(task).then(response => {
       console.log(`A Tarefa ${response.data.id} foi removida com sucesso!`);
@@ -232,9 +232,8 @@ class Todo extends Component {
   };
 
   render() {
-    const { todos, title, categs, categsCount } = this.state;
+    const { todos, title, categs } = this.state;
     const todosCount = todos.filter(todo => !todo.isHidden);
-    console.log(this.state);
 
     return (
       <div className="todo">

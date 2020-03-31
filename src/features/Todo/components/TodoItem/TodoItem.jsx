@@ -1,6 +1,18 @@
 import React from 'react';
 import { useState } from 'react';
-import { Container, EditInput, EditButton, DeleteButton } from './styles';
+import {
+  TodoItemContainer,
+  LabelContainer,
+  ButtonsContainer,
+  EditContainer,
+  EditInput,
+  EditButton,
+  DeleteButton,
+  Label,
+} from './styles';
+
+import cross from '../../../../assets/img/cross.svg';
+import pencil from '../../../../assets/img/pencil.svg';
 
 const TodoItem = ({
   todo,
@@ -29,11 +41,11 @@ const TodoItem = ({
   };
 
   return (
-    <Container
+    <TodoItemContainer
       style={{ display: todo.isHidden ? 'none' : 'block' }}
       className={` ${todo.completed ? 'completed' : ''}`}>
       {edit ? (
-        <div>
+        <EditContainer>
           <EditInput
             placeholder="Task"
             value={taskName}
@@ -46,20 +58,24 @@ const TodoItem = ({
             onKeyPress={onKeyPress}
             onChange={event => setCateg(event.target.value)}
           />
-        </div>
+        </EditContainer>
       ) : (
-        <div>
-          <span onClick={() => completeTodoItem(todo)}>
+        <LabelContainer>
+          <Label onClick={() => completeTodoItem(todo)}>
             {todo.value} - {todo.categ}
-          </span>
+          </Label>
 
-          <EditButton onClick={updateItem}>edit</EditButton>
-          <DeleteButton onClick={() => deleteTodoItem(todo)}>
-            delete
-          </DeleteButton>
-        </div>
+          <ButtonsContainer>
+            <EditButton onClick={updateItem}>
+              <img alt="edit" src={pencil} />
+            </EditButton>
+            <DeleteButton onClick={() => deleteTodoItem(todo)}>
+              <img alt="delete" src={cross} />
+            </DeleteButton>
+          </ButtonsContainer>
+        </LabelContainer>
       )}
-    </Container>
+    </TodoItemContainer>
   );
 };
 
